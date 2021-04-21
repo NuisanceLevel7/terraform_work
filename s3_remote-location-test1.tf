@@ -55,10 +55,10 @@ resource "aws_s3_bucket_policy" "b" {
             "Effect": "Deny",
             "Principal": "*",
             "Action": "s3:*",
-            "Resource": [
-                "arn:aws:s3:::remote-location-test1",
-                "arn:aws:s3:::remote-location-test1/*"
-            ],
+            "Resource" = [
+                aws_s3_bucket.b.arn,
+                "${aws_s3_bucket.b.arn}/*",
+            ]
             "Condition": {
                 "Bool": {
                     "aws:SecureTransport": "False"
