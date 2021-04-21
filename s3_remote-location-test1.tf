@@ -25,6 +25,19 @@ resource "aws_s3_bucket_public_access_block" "b" {
 }
 
 
+
+output "account_id" {
+  value = data.aws_caller_identity.current.account_id
+}
+
+output "caller_arn" {
+  value = data.aws_caller_identity.current.arn
+}
+
+output "caller_user" {
+  value = data.aws_caller_identity.current.user_id
+}
+
 resource "aws_s3_bucket_policy" "b" {
   bucket = aws_s3_bucket.b.id
   /* policy = file("/home/vengle/Projects/AWS/s3.remote-location-test1.json") */
@@ -76,7 +89,7 @@ resource "aws_s3_bucket_policy" "b" {
             "Sid": "Allow this account...",
             "Effect": "Allow",
             "Principal": {
-                     "AWS" : var.root_arn
+                     "AWS" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
             },
             "Action": "s3:*",
             "Resource" = [
