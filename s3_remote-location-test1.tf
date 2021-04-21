@@ -37,9 +37,9 @@ resource "aws_s3_bucket_policy" "b" {
             "Effect": "Deny",
             "Principal": "*",
             "Action": "s3:*",
-            "Resource": [
-                "arn:aws:s3:::remote-location-test1",
-                "arn:aws:s3:::remote-location-test1/*"
+            "Resource" = [
+                aws_s3_bucket.b.arn,
+                "${aws_s3_bucket.b.arn}/*",
             ],
             "Condition": {
                 "NotIpAddress": {
@@ -62,9 +62,9 @@ resource "aws_s3_bucket_policy" "b" {
             "Effect": "Deny",
             "Principal": "*",
             "Action": "s3:*",
-            "Resource": [
-                "arn:aws:s3:::remote-location-test1",
-                "arn:aws:s3:::remote-location-test1/*"
+            "Resource" = [
+                aws_s3_bucket.b.arn,
+                "${aws_s3_bucket.b.arn}/*",
             ],
             "Condition": {
                 "Bool": {
@@ -77,9 +77,9 @@ resource "aws_s3_bucket_policy" "b" {
             "Effect": "Allow",
             "Principal": "*",
             "Action": "s3:*",
-            "Resource": [
-                "arn:aws:s3:::remote-location-test1",
-                "arn:aws:s3:::remote-location-test1/*"
+            "Resource" = [
+                aws_s3_bucket.b.arn,
+                "${aws_s3_bucket.b.arn}/*",
             ],
             "Condition": {
                 "ArnEquals": {
@@ -87,21 +87,6 @@ resource "aws_s3_bucket_policy" "b" {
                         "arn:aws:iam::736922127837:role/remotelocation-s3-access-ec2",
                         "arn:aws:iam::736922127837:root"
                     ]
-                }
-            }
-        },
-        {
-            "Sid": "Enforce Secure xport",
-            "Effect": "Deny",
-            "Principal": "*",
-            "Action": "s3:*",
-            "Resource": [
-                "arn:aws:s3:::remote-location-test1",
-                "arn:aws:s3:::remote-location-test1/*"
-            ],
-            "Condition": {
-                "Bool": {
-                    "aws:SecureTransport": "False"
                 }
             }
         }
