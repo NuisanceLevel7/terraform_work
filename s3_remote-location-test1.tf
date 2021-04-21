@@ -50,7 +50,7 @@ resource "aws_s3_bucket_policy" "b" {
                     ]
                 },
                 "StringNotEquals": {
-                    "aws:SourceVpce": "vpce-xxxxxxxxxxx"
+                    "aws:SourceVpce": var.s3_endpoint
                 },
                 "ArnNotEquals": {
                     "aws:SourceArn": "arn:aws:iam::736922127837:role/remotelocation-s3-access-ec2"
@@ -75,20 +75,14 @@ resource "aws_s3_bucket_policy" "b" {
         {
             "Sid": "Allow this account...",
             "Effect": "Allow",
-            "Principal": "*",
+            "Principal": {
+                     "AWS" : var.root_arn
+            },
             "Action": "s3:*",
             "Resource" = [
                 aws_s3_bucket.b.arn,
                 "${aws_s3_bucket.b.arn}/*",
-            ],
-            "Condition": {
-                "ArnEquals": {
-                    "aws:PrincipalArn": [
-                        "arn:aws:iam::736922127837:role/remotelocation-s3-access-ec2",
-                        "arn:aws:iam::736922127837:root"
-                    ]
-                }
-            }
+            ]
         }
     ]
   })

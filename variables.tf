@@ -3,3 +3,15 @@ variable "instance_name" {
   type        = string
   default     = "TerraformCreated"
 }
+
+variable "root_arn" {
+  type    = string
+  default = "arn:aws:iam::736922127837:root"
+}
+
+variable "s3_endpoint" {
+  type    = string
+  default = "vpce-xxxxxxxxxxx"
+}
+
+
