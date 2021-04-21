@@ -1,0 +1,26 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 3.27"
+    }
+  }
+}
+
+provider "aws" {
+  profile = "default"
+  region  = "us-east-1"
+}
+
+resource "aws_instance" "ApacheWeb" {
+  ami           = "ami-07306a2ca193d0286"
+  instance_type = "t2.micro"
+
+  tags = {
+    Name = var.instance_name
+  }
+}
+resource "aws_key_pair" "deployer" {
+  key_name   = "deployer-key"
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDfaaKajilr50Z0hL8FQSbPvkEuhPV9KvG8I41elhQlnfEGbZFm9W9IRFMtjp3ywv5+O7EL9ClMnOWPuwMu4AcSGK8oFV8PFr1b6Mhlop+c5GnsLAKmCeRGoticT8Vd5ffzU8ruwNTdpjhFhbSIoYSkR0od1hYkcf3L9juuZ1r1e0ICZBMBtjXMVZ1RMy2YRcKHdT31Nn3lNLo4OLg9seo5B0mxK4BW520wy6stFj6fScrrBNaGElCR0uLBKo+NWh4Np0StotIxniCI247XjWp/lwjZ1GvsXjjtP8ZwQkqVLOoH06WR3bJ1uqvfeEuitmQktZM8QOjeEUCAW0AE3toh vengle@ip-172-31-56-143.ec2.internal"
+}
