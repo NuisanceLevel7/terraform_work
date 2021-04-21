@@ -30,17 +30,57 @@ resource "aws_s3_bucket_policy" "b" {
   /* policy = file("/home/vengle/Projects/AWS/s3.remote-location-test1.json") */
   policy = jsonencode({
     "Version": "2012-10-17",
-    "Id": "Policy1587152430504",
+    "Id": "LockDown",
     "Statement": [
         {
-            "Sid": "Stmt1587152093671",
+            "Sid": "Restrict Outsiders",
+            "Effect": "Deny",
+            "Principal": "*",
+            "Action": "s3:*",
+            "Resource": [
+                "arn:aws:s3:::remote-location-test1",
+                "arn:aws:s3:::remote-location-test1/*"
+            ],
+            "Condition": {
+                "NotIpAddress": {
+                    "aws:SourceIp": [
+                        "3.214.108.144",
+                        "172.31.56.143",
+                        "107.15.230.166"
+                    ]
+                },
+                "StringNotEquals": {
+                    "aws:SourceVpce": "vpce-xxxxxxxxxxx"
+                },
+                "ArnNotEquals": {
+                    "aws:SourceArn": "arn:aws:iam::736922127837:role/remotelocation-s3-access-ec2"
+                }
+            }
+        },
+        {
+            "Sid": "Enforce Secure xport",
+            "Effect": "Deny",
+            "Principal": "*",
+            "Action": "s3:*",
+            "Resource": [
+                "arn:aws:s3:::remote-location-test1",
+                "arn:aws:s3:::remote-location-test1/*"
+            ],
+            "Condition": {
+                "Bool": {
+                    "aws:SecureTransport": "False"
+                }
+            }
+        },
+        {
+            "Sid": "Allow this account...",
             "Effect": "Allow",
             "Principal": "*",
             "Action": "s3:*",
-            "Resource" = [
-                aws_s3_bucket.b.arn,
-                "${aws_s3_bucket.b.arn}/*",
-            ]
+            "Resource": [
+                "arn:aws:s3:::remote-location-test1",
+                "arn:aws:s3:::remote-location-test1/*"
+            ],
             "Condition": {
                 "ArnEquals": {
                     "aws:PrincipalArn": [
@@ -51,14 +91,14 @@ resource "aws_s3_bucket_policy" "b" {
             }
         },
         {
-            "Sid": "Stmt1587152420280",
+            "Sid": "Enforce Secure xport",
             "Effect": "Deny",
             "Principal": "*",
             "Action": "s3:*",
-            "Resource" = [
-                aws_s3_bucket.b.arn,
-                "${aws_s3_bucket.b.arn}/*",
-            ]
+            "Resource": [
+                "arn:aws:s3:::remote-location-test1",
+                "arn:aws:s3:::remote-location-test1/*"
+            ],
             "Condition": {
                 "Bool": {
                     "aws:SecureTransport": "False"
@@ -66,7 +106,6 @@ resource "aws_s3_bucket_policy" "b" {
             }
         }
     ]
-
   })
 }
 
