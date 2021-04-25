@@ -1,10 +1,7 @@
-locals {
-   bucket_name = "remote-location-test1"
-}
 
 
 resource "aws_s3_bucket" "bucket1" {
-  bucket = local.bucket_name
+  bucket = "remote-location-test1"
 
   tags = {
     CLOUDID        = "RemoteLocationTest"
@@ -21,7 +18,7 @@ resource "aws_s3_bucket" "bucket1" {
 }
 
 resource "aws_s3_bucket_public_access_block" "bucket1" {
-  bucket = local.bucket_name
+  bucket = aws_s3_bucket.bucket1.id
   block_public_acls = true
   block_public_policy = true
   ignore_public_acls = true
@@ -29,24 +26,9 @@ resource "aws_s3_bucket_public_access_block" "bucket1" {
 }
 
 
-output "Bucket_Name" {
-  value = local.bucket_name
-}
-
-output "account_id" {
-  value = data.aws_caller_identity.current.account_id
-}
-
-output "caller_arn" {
-  value = data.aws_caller_identity.current.arn
-}
-
-output "caller_user" {
-  value = data.aws_caller_identity.current.user_id
-}
 
 resource "aws_s3_bucket_policy" "bucket1" {
-  bucket = local.bucket_name
+  bucket = aws_s3_bucket.bucket1.id
   /* policy = file("/home/vengle/Projects/AWS/s3.remote-location-test1.json") */
   policy = jsonencode({
     "Version": "2012-10-17",
