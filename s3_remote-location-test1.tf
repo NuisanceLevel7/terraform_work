@@ -1,6 +1,10 @@
+locals {
+   bucket_name = "remote-location-test1"
+}
 
-resource "aws_s3_bucket" "b" {
-  bucket = "remote-location-test1"
+
+resource "aws_s3_bucket" "bucket1" {
+  bucket = local.bucket_name
 
   tags = {
     CLOUDID        = "RemoteLocationTest"
@@ -16,8 +20,8 @@ resource "aws_s3_bucket" "b" {
   }
 }
 
-resource "aws_s3_bucket_public_access_block" "b" {
-  bucket = aws_s3_bucket.b.id
+resource "aws_s3_bucket_public_access_block" "bucket1" {
+  bucket = local.bucket_name
   block_public_acls = true
   block_public_policy = true
   ignore_public_acls = true
@@ -25,6 +29,9 @@ resource "aws_s3_bucket_public_access_block" "b" {
 }
 
 
+output "Bucket_Name" {
+  value = local.bucket_name
+}
 
 output "account_id" {
   value = data.aws_caller_identity.current.account_id
@@ -38,8 +45,8 @@ output "caller_user" {
   value = data.aws_caller_identity.current.user_id
 }
 
-resource "aws_s3_bucket_policy" "b" {
-  bucket = aws_s3_bucket.b.id
+resource "aws_s3_bucket_policy" "bucket1" {
+  bucket = local.bucket_name
   /* policy = file("/home/vengle/Projects/AWS/s3.remote-location-test1.json") */
   policy = jsonencode({
     "Version": "2012-10-17",
@@ -51,8 +58,8 @@ resource "aws_s3_bucket_policy" "b" {
             "Principal": "*",
             "Action": "s3:*",
             "Resource" = [
-                aws_s3_bucket.b.arn,
-                "${aws_s3_bucket.b.arn}/*",
+                aws_s3_bucket.bucket1.arn,
+                "${aws_s3_bucket.bucket1.arn}/*",
             ],
             "Condition": {
                 "NotIpAddress": {
@@ -76,8 +83,8 @@ resource "aws_s3_bucket_policy" "b" {
             "Principal": "*",
             "Action": "s3:*",
             "Resource" = [
-                aws_s3_bucket.b.arn,
-                "${aws_s3_bucket.b.arn}/*",
+                aws_s3_bucket.bucket1.arn,
+                "${aws_s3_bucket.bucket1.arn}/*",
             ],
             "Condition": {
                 "Bool": {
@@ -93,8 +100,8 @@ resource "aws_s3_bucket_policy" "b" {
             },
             "Action": "s3:*",
             "Resource" = [
-                aws_s3_bucket.b.arn,
-                "${aws_s3_bucket.b.arn}/*",
+                aws_s3_bucket.bucket1.arn,
+                "${aws_s3_bucket.bucket1.arn}/*",
             ]
         }
     ]

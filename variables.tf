@@ -16,3 +16,4 @@ variable "s3_endpoint" {
 
 
 data "aws_caller_identity" "current" {}
+
